@@ -3,6 +3,7 @@ import Banner from '../Components/Banner'
 import Subbanner from '../Components/Subbanner';
 import '../Styles/Grid.css'
 import { getUsersGames } from '../Api/Game'
+import FileUpload from '../Components/FileUpload';
 
 function Games() {
 
@@ -28,10 +29,11 @@ function Games() {
       <Subbanner></Subbanner>
 
       <h1>Your Games</h1>
-      <div className="colspan-2">
+      <div>
         <button onClick={createNewGame} className="block">
           Create New Game
         </button>
+        <FileUpload/>
       </div>
       <div className="grid-container">
         {games.length > 0 ? (

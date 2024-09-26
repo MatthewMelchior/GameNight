@@ -35,6 +35,12 @@ app.use('/api/users', userRoutes);
 const gameRoutes = require('./routes/games');
 app.use('/api/games', gameRoutes);
 
+const questionRoutes = require('./routes/questions');
+app.use('/api/questions', questionRoutes);
+
+const imageRoutes = require('./routes/images');
+app.use('/api/images', imageRoutes);
+
 
 app.get('/', (req, res) => {
     res.send('Health check');

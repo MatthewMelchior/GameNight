@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const router = express.Router();
-const isAuthenticated = require('../middleware/auth'); // Import the middleware
+const isAuthenticated = require('../middleware/auth');
 const {isValidPassword, isValidUsername} = require('../utils/users');
 
 // POST /api/users/register
@@ -77,7 +77,7 @@ router.post('/logout', isAuthenticated, (req, res) => {
 
 // get is authenticated
 router.get('/isAuthenticated', isAuthenticated, (req, res) => {
-    res.status(200).json({ message: 'authenticated' });
+    res.status(200).json({ message: 'authenticated' });;
 });
 
 module.exports = router;

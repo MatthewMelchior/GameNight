@@ -1,76 +1,32 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import Banner from '../Components/Banner'
 import '../Styles/Grid.css'
 import '../Styles/Home.css'
 import Subbanner from '../Components/Subbanner';
 import { useAuth } from '../utils/AuthContext';
+import { registerUser, loginUser, logoutUser } from '../Api/User';
 
 const Auth = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const { isAuthenticated, checkAuth } = useAuth();
+  const { checkAuth } = useAuth();
 
   const handleRegister = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/users/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await response.json();
-      setMessage(data.message);
-    } catch (error) {
-      setMessage('Error: ' + error.message);
-    }
+    let result = await registerUser(username, password);
+    setMessage(result);
   };
 
   const handleLogin = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/users/login', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await response.json();
-      checkAuth();
-      setMessage(data.message);
-    } catch (error) {
-      setMessage('Error: ' + error.message);
-    }
+    let result = await loginUser(username, password);
+    setMessage(result);
+    checkAuth();
   };
 
   const handleLogout = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/users/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-      const data = await response.json();
-      checkAuth();
-      setMessage(data.message);
-    } catch (error) {
-      setMessage('Error: ' + error.message);
-    }
-  };
-
-  const checkAuthenticated = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/users/isAuthenticated', {
-        method: 'GET',
-        credentials: 'include',
-      });
-      const data = await response.json();
-      setMessage(data.message);
-    } catch (error) {
-      setMessage('Error: ' + error.message);
-    }
+    let result = await logoutUser(username, password);
+    setMessage(result);
+    checkAuth();
   };
 
   return (
@@ -96,7 +52,6 @@ const Auth = () => {
         <button onClick={handleRegister}>Register</button>
         <button onClick={handleLogin}>Login</button>
         <button onClick={handleLogout}>Logout</button>
-        <button onClick={checkAuthenticated}>check auth</button>
       </div>
       {message && <p>{message}</p>}
     </div>

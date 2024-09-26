@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './utils/AuthContext'; // Import the AuthProvider
 import Home from './Pages/Home';
 import Auth from './Pages/Auth';
-import Game from './Pages/Game';
+import Games from './Pages/Games';
+import Profile from './Pages/Profile';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Auth" element={<Auth />} />
-          <Route path="/Game" element={<Game />} />
+          <Route path="/Games" element={<Games />} />
+          <Route path="/Profile" element={<Profile />} />
         </Routes>
       </Router>
     </AuthProvider>

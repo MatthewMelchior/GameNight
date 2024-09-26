@@ -32,6 +32,10 @@ app.use(session({
 const userRoutes = require('./routes/users');
 app.use('/api/users', userRoutes);
 
+const gameRoutes = require('./routes/games');
+app.use('/api/games', gameRoutes);
+
+
 app.get('/', (req, res) => {
     res.send('Health check');
 });

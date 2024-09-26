@@ -11,7 +11,7 @@ function Game() {
         title="Trivia Night"
       />
       <Subbanner></Subbanner>
-      <h2>Game Page</h2>
+      <h2>Profile Page</h2>
     </div>
   );
 }

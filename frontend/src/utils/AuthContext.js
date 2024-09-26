@@ -1,5 +1,6 @@
 // AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { checkAuthentication } from '../Api/User';
 
 // Create Context
 const AuthContext = createContext();
@@ -10,10 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     // Make an API call to check session or token validity
-    const response = await fetch('http://localhost:5000/api/users/isAuthenticated', {
-      method: 'GET',
-      credentials: 'include', // Include cookies
-    });
+    const response = await checkAuthentication();
     setIsAuthenticated(response.ok); // Set authentication based on response
   };
 

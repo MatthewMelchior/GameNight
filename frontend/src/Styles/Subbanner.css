@@ -1,0 +1,25 @@
+.subbanner {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  padding: 20px;
+  text-align: center;
+}
+
+.subbanner nav ul {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0;
+}
+
+.subbanner nav ul li {
+  display: inline; /* Display links inline */
+  margin: 0 15px; /* Space between links */
+}
+
+.subbanner nav ul li a {
+  color: white; /* Link color */
+  text-decoration: none; /* Remove underline */
+}
+
+.subbanner nav ul li a:hover {
+  text-decoration: underline; /* Underline on hover */
+}

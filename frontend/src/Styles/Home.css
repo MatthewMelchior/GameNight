@@ -1,0 +1,29 @@
+.q {
+  height: 6rem;
+  grid-row-start: 1;
+  grid-column: 4 / span 6;
+}
+
+.q-body {
+  height: 24rem;
+  grid-row-start: 2;
+  grid-column: 4 / span 6;
+}
+
+.q-answer {
+  height: 8rem;
+  grid-row-start: 3;
+  grid-column: 4 / span 6;
+}
+
+.chat-history {
+  height: 24rem;
+  grid-row-start: 2;
+  grid-column: 10 / span 2;
+}
+
+.chat-box {
+  height: 8rem;
+  grid-row-start: 3;
+  grid-column: 10 / span 2;
+}

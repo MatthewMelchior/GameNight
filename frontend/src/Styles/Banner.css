@@ -1,0 +1,12 @@
+.banner {
+  background-color: #1D366F; /* Green background */
+  color: white; /* White text */
+  padding: 1rem;
+  text-align: center;
+}
+
+.banner-button:hover {
+  background-color: #e7e7e7; /* Light grey on hover */
+}
+
+/*#08C076*/

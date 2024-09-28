@@ -6,9 +6,10 @@ const Game = sequelize.define('Game', {
     type: DataTypes.STRING,
     allowNull: false,
     unique: false,
+    defaultValue: "New Game",
   },
-  author: {
-    type: DataTypes.STRING,
+  userId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 }, {

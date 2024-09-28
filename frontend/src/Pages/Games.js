@@ -1,13 +1,28 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Banner from '../Components/Banner'
 import Subbanner from '../Components/Subbanner';
+import { getUsersGames, createGame, deleteUserGame } from '../Api/Game'
+import GameCard from '../Components/GameCard';
 import '../Styles/Grid.css'
-import { getUsersGames } from '../Api/Game'
-import FileUpload from '../Components/FileUpload';
 
 function Games() {
 
   const [games, setGames] = useState([]);
+  const navigate = useNavigate();  // Initialize useNavigate hook
+
+  const onViewGame = (gameId) => {
+    navigate(`/Games/${gameId}`);
+  };
+
+  const onDeleteGame = (gameId) => {
+    deleteUserGame(gameId).then((res) => {
+      if (res.ok) {
+        setGames((prevGames) => prevGames.filter((game) => game.id !== gameId));
+      }
+    })
+  };
+
 
   // Fetch user's games (replace with your actual API endpoint)
   useEffect(() => {
@@ -17,8 +32,12 @@ function Games() {
   }, []);
 
   const createNewGame = () => {
-    // Redirect to game creation page or handle the game creation logic here
-    console.log('Create New Game');
+    createGame().then((res) => {
+      const gameId = res.game;  // Assuming the API response contains the gameId
+      navigate(`/Games/${gameId}`);    // Navigate to the game page using the gameId
+    }).catch((error) => {
+      console.error('Error creating game:', error);  // Handle error if necessary
+    });
   };
 
   return (
@@ -33,18 +52,16 @@ function Games() {
         <button onClick={createNewGame} className="block">
           Create New Game
         </button>
-        <FileUpload/>
       </div>
       <div className="grid-container">
         {games.length > 0 ? (
           games.map((game) => (
-            <div key={game.id} className="colspan-2 block">
-              <h2>{game.title}</h2>
-              <p>Created on: {new Date(game.createdAt).toLocaleDateString()}</p>
-              <button>View Game</button>
-              <button>Edit Game</button>
-              <button>Delete Game</button>
-            </div>
+            <GameCard
+              key={game.id}
+              game={game}
+              onView={onViewGame}
+              onDelete={onDeleteGame}
+            />
           )))
           : (
             <div className="colspan-1">

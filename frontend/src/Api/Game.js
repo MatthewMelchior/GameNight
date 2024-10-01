@@ -17,7 +17,7 @@ export const getUsersGames = async () => {
   }
 }
 
-export const getUserGame = async (gameId) => {
+export const getGameInfo = async (gameId) => {
   try {
     const response = await fetch(url + `/view/${gameId}`, {
       method: 'GET',

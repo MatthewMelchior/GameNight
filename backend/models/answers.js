@@ -1,37 +1,35 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db'); // Your DB connection
 
-const Question = sequelize.define('Question', {
-  question: {
+const Answer = sequelize.define('Answer', {
+  content: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  correctAnswers: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  incorrectAnswers: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  answerType: {
+  questionId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  duration: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
   imageId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
-  gameId: {
+  answerType: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    defaultValue: 0,
+  },
+  isCorrect: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
   },
 }, {
   timestamps: true,
 });
 
-module.exports = Question;
+module.exports = Answer;

@@ -41,6 +41,9 @@ app.use('/api/questions', questionRoutes);
 const imageRoutes = require('./routes/images');
 app.use('/api/images', imageRoutes);
 
+const answerRoutes = require('./routes/answers');
+app.use('/api/answers', answerRoutes);
+
 
 app.get('/', (req, res) => {
     res.send('Health check');

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const isAuthenticated = require('../middleware/auth');
-const Game = require('../models/games');
+const { Answer, Question, Game } = require('../models');
 
 router.get('/', isAuthenticated, async (req, res) => {
   const userId = req.session.userId
@@ -55,29 +55,40 @@ router.delete('/:gameId', isAuthenticated, async (req, res) => {
 });
 
 router.get('/view/:gameId', isAuthenticated, async (req, res) => {
-
   const { gameId } = req.params;
-  const userId = req.session.userId
+  const userId = req.session.userId;
 
   if (!gameId || gameId <= 0) {
-    return res.status(400).json({ error: "invalid Id" });
+    return res.status(400).json({ error: "Invalid gameId" });
   }
 
   try {
-    const game = await Game.findByPk(gameId);
+    // Find the game by primary key, including its questions and answers
+    const game = await Game.findByPk(gameId, {
+      include: [{
+        model: Question,
+        as: 'questions',  // Assuming 'questions' is the alias for the association
+        include: [{
+          model: Answer,
+          as: 'answers',  // Assuming 'answers' is the alias for the association
+        }]
+      }]
+    });
 
     if (!game) {
       return res.status(404).json({ error: "Game not found" });
     }
 
+    // Check if the user is authorized to view this game
     if (game.userId !== userId) {
-      return res.status(403).json({ error: 'Forbidden: You are not authorized to view this post' });
-
+      return res.status(403).json({ error: 'Forbidden: You are not authorized to view this game' });
     }
 
-    res.status(200).json({ game: game });
+    // Respond with the game, its questions, and answers
+    res.status(200).json({ game });
 
   } catch (error) {
+    console.error('Error fetching game details:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

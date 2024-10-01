@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const isAuthenticated = require('../middleware/auth');
 const upload = require('../middleware/upload');
-const Image = require('../models/images');
+const { Image } = require('../models');
 
 router.post('/', isAuthenticated, upload.single('file'), async (req, res) => {
   try {

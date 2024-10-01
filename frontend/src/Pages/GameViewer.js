@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Banner from '../Components/Banner'
 import Subbanner from '../Components/Subbanner';
-import { getUserGame } from '../Api/Game'
+import { getGameInfo } from '../Api/Game'
 import { useParams } from 'react-router-dom';
 import FileUpload from '../Components/FileUpload';
 import GameTitle from '../Components/GameViewer/GameTitle'
@@ -44,10 +44,10 @@ function GameViewer() {
     setQuestions([...questions, newQuestion]);
   };
 
-  // Fetch user's games if not provided (i.e., created game)
+  // Fetch user's game
   useEffect(() => {
     // Fetch user data based on the username
-    getUserGame(gameId).then((data) => {
+    getGameInfo(gameId).then((data) => {
       setGame(data.game);
       setGameTitle(data.game.name);
       setQuestions([])

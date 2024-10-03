@@ -5,99 +5,134 @@ import { getGameInfo } from '../Api/Game'
 import { useParams } from 'react-router-dom';
 import FileUpload from '../Components/FileUpload';
 import GameTitle from '../Components/GameViewer/GameTitle'
-import GameInfo from '../Components/GameViewer/GameInfo'
 import QuestionViewer from '../Components/GameViewer/QuestionViewer'
 import QuestionSideBar from '../Components/GameViewer/QuestionSideBar'
 import '../Styles/Grid.css'
 
 function GameViewer() {
 
-  const [game, setGame] = useState();
   const { gameId } = useParams();
-  const [gameTitle, setGameTitle] = useState(); // Editable game title
-  const [questions, setQuestions] = useState(); // Game questions
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [game, setGame] = useState();
+  const [index, setIndex] = useState(0);
 
-  const handleTitleEdit = () => {
-    setIsEditingTitle(true);
-  };
-
+  //#region Game-Name-Handlers
   const handleTitleChange = (e) => {
-    setGameTitle(e.target.value);
+    let newGameState = { ...game };
+    newGameState.name = e.target.value
+    setGame(newGameState);
+  };
+  //#endregion Game-Name-Handlers
+
+  //#region Game-Duration
+  //#endregion
+
+  //#region Question-Handlers
+
+  const handleQuestionNameChange = (e) => {
+    let newGameState = { ...game };
+    newGameState.questions[index].content = e.target.value;
+    setGame(newGameState);
+  }
+
+  //#endregion
+
+  //#region Answer-Handlers
+
+  const handleChangeAnswerContent = (id, newContent) => {
+    let newGameState = { ...game };
+    newGameState.questions[index].answers = newGameState.questions[index].answers.map((x) => {
+      if (x.id === id) {
+        x.content = newContent;
+        return x;
+      } else {
+        return x;
+      }
+    })
+    setGame(newGameState);
   };
 
-  const handleTitleSave = () => {
-    // Function to save the updated title to the backend
-    setIsEditingTitle(false);
+  const handleChangeAnswerCorrectness = (id, oldCorrectness) => {
+    let newGameState = { ...game };
+    newGameState.questions[index].answers = newGameState.questions[index].answers.map((x) => {
+      if (x.id === id) {
+        x.isCorrect = !oldCorrectness;
+        return x;
+      }
+      else {
+        return x;
+      }
+    })
+    setGame(newGameState);
   };
 
-  const handleAddQuestion = () => {
-    // Function to add a new question
-    const newQuestion = {
-      id: Date.now(), // temporary id
-      questionText: '',
-      image: null,
-      answers: [],
-      duration: 30,
-      questionType: 'multiple-choice',
-    };
-    setQuestions([...questions, newQuestion]);
+  const handleAddAnswer = () => {
+    let newGameState = { ...game };
+    const newAnswer = {
+      id: `New Answer ${newGameState.questions[index].answers.length + 1}`,
+      content: `New Answer ${newGameState.questions[index].answers.length + 1}`,
+      isCorrect: "false",
+      questionId: game.questions[index].id,
+    }
+    newGameState.questions[index].answers = [...newGameState.questions[index].answers, newAnswer];
+    setGame(newGameState);
   };
+
+  // Handler to remove an answer by ID
+  const handleRemoveAnswer = (id) => {
+    let newGameState = { ...game };
+    newGameState.questions[index].answers = newGameState.questions[index].answers.filter((x) => x.id !== id);
+    setGame(newGameState);
+  };
+
+  //#endregion
+
+  const handleIndexChange = (action) => {
+    if (action === "increment") {
+      if (index < game?.questions.length) setIndex(index + 1);
+    }
+    else if (action === "decrement") {
+      if (index > 0) setIndex(index - 1);
+    }
+  }
 
   // Fetch user's game
   useEffect(() => {
     // Fetch user data based on the username
     getGameInfo(gameId).then((data) => {
       setGame(data.game);
-      setGameTitle(data.game.name);
-      setQuestions([])
     });
   }, []);
 
   return (
     <div>
+      {JSON.stringify(game)}
       <Banner
         title="Trivia Night"
       />
       <Subbanner />
       <FileUpload />
-      <div className="grid-container">
-        <GameTitle
-          isEditingTitle={isEditingTitle}
-          gameTitle={gameTitle}
-          handleTitleChange={handleTitleChange}
-          handleTitleSave={handleTitleSave}
-          handleTitleEdit={handleTitleEdit}
-        />
-        <GameInfo
-          game={game}
-        />
-        <QuestionViewer
-          questions={questions}
-        />
-        <QuestionSideBar
-          game={game}
-        />
-      </div>
-      <div>
-        {/* Carousel of Questions */}
-        <div className="carousel">
-          <h3>Other Questions</h3>
-          <div style={{ display: 'flex', overflowX: 'scroll' }}>
-            {questions?.map((question, index) => (
-              <div key={question.id} style={{ margin: '0 10px' }}>
-                <p>{question.questionText || 'Untitled'}</p>
-              </div>
-            ))}
-            <button onClick={handleAddQuestion}>Add Question</button>
-          </div>
-        </div>
 
-        {/* Launch Game Button */}
-        <button onClick={() => alert('Launch game functionality to be implemented!')}>
-          Launch Game
-        </button>
-      </div>
+      {game &&
+        <div className="grid-container">
+          <GameTitle
+            game={game}
+            handleTitleChange={handleTitleChange}
+          />
+          <QuestionViewer
+            question={game?.questions[0]}
+            handleQuestionNameChange={handleQuestionNameChange}
+            handleAddAnswer={handleAddAnswer}
+            handleRemoveAnswer={handleRemoveAnswer}
+            handleChangeAnswerCorrectness={handleChangeAnswerCorrectness}
+            handleChangeAnswerContent={handleChangeAnswerContent}
+          />
+
+          <QuestionSideBar
+            game={game}
+            index={index}
+          />
+        </div>
+      }
 
     </div>
   )

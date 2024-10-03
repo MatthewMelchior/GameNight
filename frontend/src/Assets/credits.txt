@@ -1,1 +1,5 @@
 <a href="https://www.flaticon.com/free-icons/photo" title="photo icons">Photo icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/picture" title="picture icons">Picture icons created by Superndre - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/incorrect" title="incorrect icons">Incorrect icons created by Aldo Cervantes - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/tick" title="tick icons">Tick icons created by Roundicons - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/recycle-bin" title="recycle bin icons">Recycle bin icons created by Uniconlabs - Flaticon</a>

@@ -16,8 +16,8 @@ const Question = sequelize.define('Question', {
     allowNull: false,
     defaultValue: 60,
   },
-  imageId: {
-    type: DataTypes.INTEGER,
+  image: {
+    type: DataTypes.STRING,
     allowNull: true,
   },
   gameId: {

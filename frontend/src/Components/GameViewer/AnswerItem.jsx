@@ -9,7 +9,7 @@ const AnswerItem = ({ answer, handleRemoveAnswer, handleChangeAnswerCorrectness,
   return (
     <div className='answer-item'>
       {answer &&
-        <div>
+        <div className="">
           <img
             className='icon'
             src={answer.isCorrect ? checkmarkIcon : xIcon}

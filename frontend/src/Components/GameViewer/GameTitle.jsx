@@ -17,20 +17,24 @@ const GameTitle = ({ game, handleTitleChange }) => {
 
   return (
     <div className='grid-container game-title-container block'>
-      {isEditingTitle ? (
-        <input
-          type="text"
-          className="game-title"
-          value={this}
-          onChange={e => handleTitleChange(e)}
-          onBlur={handleTitleSave} // Save on blur
-          autoFocus
-        />
-      ) : (
-        <h1 className="game-title" onClick={handleTitleEdit}>{game?.name}</h1>
-      )}
-      <span className="date-info">Created on: {new Date(game?.createdAt).toLocaleDateString()}</span>
-      <span className="date-info">Last edited on: {new Date(game?.updatedAt).toLocaleDateString()}</span>
+      <div className="game-title-text-container">
+        {isEditingTitle ? (
+          <input
+            type="text"
+            className="game-title"
+            value={this}
+            onChange={e => handleTitleChange(e)}
+            onBlur={handleTitleSave} // Save on blur
+            autoFocus
+          />
+        ) : (
+          <div className="game-title" onClick={handleTitleEdit}>{game?.name}</div>
+        )}
+        <div className="game-subtitle-container">
+          <span className="date-info">Created on: {new Date(game?.createdAt).toLocaleDateString()}</span>
+          <span className="date-info">Last edited on: {new Date(game?.updatedAt).toLocaleDateString()}</span>
+        </div>
+      </div>
     </div>
   );
 };

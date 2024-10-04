@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Backend",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/backend/server.js", // Path to your main server file
+      "outFiles": [
+        "${workspaceFolder}/dist/**/*.js"
+      ], // Adjust if you have transpiled files
+      "env": {
+        "NODE_ENV": "development" // Optional: Set environment variables here
+      }
+    }
+  ]
+}

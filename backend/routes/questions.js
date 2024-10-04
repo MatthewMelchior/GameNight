@@ -37,14 +37,14 @@ router.get('/:questionId', isAuthenticated, async (req, res) => {
 // POST
 router.post('/', isAuthenticated, async (req, res) => {
   const userId = req.session.userId
-  const { content, questionType, duration, imageId, gameId } = req.body;
+  const { content, questionType, duration, image, gameId } = req.body;
 
   const question = await Question.create({
     userId: userId,
     content: content,
     questionType: questionType,
     duration: duration,
-    imageId: imageId,
+    image: image,
     gameId: gameId,
   });
 
@@ -82,7 +82,7 @@ router.delete('/:questionId', isAuthenticated, async (req, res) => {
 // PATCH
 router.patch('/:questionId', isAuthenticated, async (req, res) => {
   const { questionId } = req.params;
-  const { content, duration, questionType, imageId, } = req.body;
+  const { content, duration, questionType, image, } = req.body;
   const userId = req.session.userId
 
   if (!questionId || questionId <= 0) {
@@ -104,7 +104,7 @@ router.patch('/:questionId', isAuthenticated, async (req, res) => {
     if (content !== undefined) question.content = content;
     if (duration !== undefined) question.duration = duration;
     if (questionType !== undefined) question.questionType = questionType;
-    if (imageId !== undefined) question.imageId = imageId
+    if (image !== undefined) question.image = image
 
     // Save the updated question
     await question.save();

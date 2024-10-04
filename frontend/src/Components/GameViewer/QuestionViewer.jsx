@@ -1,25 +1,12 @@
 import React, { useState } from 'react';
 import '../../Styles/Grid.css'
 import '../../Styles/GameViewer.css'
-import placeholder from '../../Assets/imagePrompt256.png'
 import AnswerBox from './AnswerBox';
 
 
-const QuestionViewer = ({ question, handleQuestionNameChange, handleAddAnswer, handleRemoveAnswer, handleChangeAnswerCorrectness, handleChangeAnswerContent }) => {
+const QuestionViewer = ({ question, handleQuestionNameChange, handleAddAnswer, handleRemoveAnswer, handleChangeAnswerCorrectness, handleChangeAnswerContent, handleImageChange, image }) => {
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [image, setImage] = useState(placeholder);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result); // Update the image to the uploaded file
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleImageClick = () => {
     document.getElementById('fileInput').click(); // Trigger click on hidden file input
@@ -39,10 +26,10 @@ const QuestionViewer = ({ question, handleQuestionNameChange, handleAddAnswer, h
       {question &&
         <div>
           {isEditingTitle ? (
-            <div>
+            <div className="title-container">
               <input
                 type="text"
-                className="editable-title"
+                className="editable-title "
                 value={question.content}
                 onChange={e => handleQuestionNameChange(e)}
                 onBlur={handleTitleSave} // Save on blur
@@ -50,8 +37,8 @@ const QuestionViewer = ({ question, handleQuestionNameChange, handleAddAnswer, h
               />
             </div>
           ) : (
-            <div>
-              <h1 className="editable-title" onClick={handleTitleEdit}>{question?.content}</h1>
+            <div className="title-container">
+              <div className="editable-title" onClick={handleTitleEdit}>{question?.content}</div>
             </div>
           )}
           <div className="image-upload-container">
@@ -74,12 +61,10 @@ const QuestionViewer = ({ question, handleQuestionNameChange, handleAddAnswer, h
             handleRemoveAnswer={handleRemoveAnswer}
             handleChangeAnswerCorrectness={handleChangeAnswerCorrectness}
             handleChangeAnswerContent={handleChangeAnswerContent}
-            onAnswerClick={(() => (console.log("hi")))}
+            handleAddAnswer={handleAddAnswer}
           />
-          <button onClick={handleAddAnswer}>Add New Answer</button>
         </div>
       }
-      <button onClick={() => console.log(question)}>debug log</button>
     </div>
   );
 };

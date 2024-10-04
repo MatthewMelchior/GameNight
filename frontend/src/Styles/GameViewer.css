@@ -1,11 +1,29 @@
 .game-title-container {
-  height: 4rem;
   grid-row-start: 1;
   grid-column: 3 / span 8;
 }
 
+.game-title-text-container {
+  display: flex;
+  grid-column: span 12;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-subtitle-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .game-title {
-  grid-column: span 8;
+  font-size: 2rem;
+  height: 2.75rem;
+  font-weight: bold;
+  padding: 0.25rem;
+  box-sizing: border-box;
 }
 
 .game-info {
@@ -16,6 +34,8 @@
 
 .date-info {
   grid-column: span 2;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .question-container {
@@ -46,12 +66,15 @@
   margin-left: auto;
   margin-right: auto;
   width: 20rem;
+  height: 2.75rem;
 }
 
 .icon {
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.5rem;
+  margin-top: auto;
+  margin-bottom: auto;
   cursor: 'pointer';
 }
 
@@ -60,6 +83,15 @@
   padding: 0.25rem;
   font-size: 1rem;
   margin-right: 1rem;
+}
+
+.input {
+  flex: 1;
+  padding: 0.25rem;
+  font-size: 1rem;
+  margin-right: 1rem;
+  border: hidden;
+
 }
 
 .delete-icon {
@@ -73,16 +105,75 @@
   font-size: 1.5rem;
   font-weight: bold;
   padding: 0.25rem;
-  width: 100%;
   box-sizing: border-box;
-  outline: none;
-  transition: border 0.2s ease-in-out; /* Smooth transition for border */
-  border: 1px solid transparent; /* No border in default state */
 }
+
+.editable-title-input {
+  width: 100%;
+}
+
 
 /* Input-specific styles (applied only when editing) */
 .title-input {
-  border: 1px solid #ccc; /* Show border when input is active */
+  border: 1px solid #ccc;
+  /* Show border when input is active */
 }
 
+/* Style the image to look like a clickable button */
+.upload-image {
+  cursor: pointer;
+  width: 16rem;
+  height: 16rem;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  transition: opacity 0.2s ease;
+}
 
+.upload-image:hover {
+  opacity: 0.8;
+}
+
+.image-upload-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0056b3;
+  color:#ccc;
+}
+
+.btn:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow */
+}
+
+.btn:active {
+  background-color: #004080; /* Even darker shade on click */
+  transform: scale(0.98); /* Slightly shrink button on click */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Lessen the shadow */
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: .25rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  height: 2.25rem;
+}

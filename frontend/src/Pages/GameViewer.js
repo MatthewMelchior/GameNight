@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import Banner from '../Components/Banner'
-import Subbanner from '../Components/Subbanner';
-import { getGameInfo } from '../Api/Game'
 import { useParams } from 'react-router-dom';
-import FileUpload from '../Components/FileUpload';
+
+import { getGameInfo, saveGame } from '../Api/Game'
+import { uploadImageArray } from '../Api/Image'
+
 import GameTitle from '../Components/GameViewer/GameTitle'
 import QuestionViewer from '../Components/GameViewer/QuestionViewer'
 import QuestionSideBar from '../Components/GameViewer/QuestionSideBar'
+import Banner from '../Components/Banner'
+import Subbanner from '../Components/Subbanner';
+import placeholder from '../Assets/imagePrompt256.png'
 import '../Styles/Grid.css'
 
 function GameViewer() {
@@ -14,25 +17,50 @@ function GameViewer() {
   const { gameId } = useParams();
   const [game, setGame] = useState();
   const [index, setIndex] = useState(0);
+  const [images, setImages] = useState(new Map());
+  const [isDirty, setIsDirty] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  //#region Game-Name-Handlers
+  const dirtyForm = () => {
+    if (!isDirty) {
+      setIsDirty(true);
+    }
+  }
+
+  //#region Game-Handlers
   const handleTitleChange = (e) => {
     let newGameState = { ...game };
     newGameState.name = e.target.value
     setGame(newGameState);
+    dirtyForm();
   };
   //#endregion Game-Name-Handlers
 
-  //#region Game-Duration
-  //#endregion
-
   //#region Question-Handlers
+
+  const getImage = () => {
+    if (images.has(index)) return URL.createObjectURL(images.get(index));
+    if (game.questions[index].image) return `http://localhost:5000/api/images/${game.questions[index].image}`;
+    else return placeholder;
+  }
 
   const handleQuestionNameChange = (e) => {
     let newGameState = { ...game };
     newGameState.questions[index].content = e.target.value;
     setGame(newGameState);
+    dirtyForm();
   }
+
+  const handleImageChange = (e) => {
+
+    const newImages = new Map(images)
+    const file = e.target.files[0];
+    // TODO: some additional validation logic here (i.e., correct type & size)
+    newImages.set(index, file)
+    setImages(newImages); // Update the image to the uploaded file
+    // ALSO TODO: if this was the 10th image set, we are forced to autosave since we can only upload 10 images at a time. 
+    dirtyForm();
+  };
 
   //#endregion
 
@@ -49,6 +77,7 @@ function GameViewer() {
       }
     })
     setGame(newGameState);
+    dirtyForm();
   };
 
   const handleChangeAnswerCorrectness = (id, oldCorrectness) => {
@@ -63,6 +92,7 @@ function GameViewer() {
       }
     })
     setGame(newGameState);
+    dirtyForm();
   };
 
   const handleAddAnswer = () => {
@@ -75,6 +105,7 @@ function GameViewer() {
     }
     newGameState.questions[index].answers = [...newGameState.questions[index].answers, newAnswer];
     setGame(newGameState);
+    dirtyForm();
   };
 
   // Handler to remove an answer by ID
@@ -82,6 +113,7 @@ function GameViewer() {
     let newGameState = { ...game };
     newGameState.questions[index].answers = newGameState.questions[index].answers.filter((x) => x.id !== id);
     setGame(newGameState);
+    dirtyForm();
   };
 
   //#endregion
@@ -95,6 +127,30 @@ function GameViewer() {
     }
   }
 
+  const handleSaveGame = () => {
+    if (isDirty) {
+      setIsLoading(true);
+      uploadImageArray(images).then(async (res) => {
+
+        const fileNames = res.fileNames;
+        const minLength = Math.min(fileNames.length, images.size); // To avoid overflow if sizes differ
+        let mapIterator = images.entries(); // Get an iterator for the Map
+        let newGameState = { ...game };
+
+        for (let i = 0; i < minLength; i++) {
+          const imageName = fileNames[i]; // Array element
+          const [key, value] = mapIterator.next().value; // Map key-value pair
+          newGameState.questions[index].image = imageName;
+        }
+        await saveGame(newGameState);
+        setImages(new Map()); // Clear map
+        setIsDirty(false); // Clean the dirty flag
+        setGame(newGameState); // and set new game state for client
+      });
+      setIsLoading(false);
+    }
+  }
+
   // Fetch user's game
   useEffect(() => {
     // Fetch user data based on the username
@@ -105,12 +161,12 @@ function GameViewer() {
 
   return (
     <div>
-      {JSON.stringify(game)}
       <Banner
         title="Trivia Night"
       />
       <Subbanner />
-      <FileUpload />
+
+      {JSON.stringify(game)}
 
       {game &&
         <div className="grid-container">
@@ -119,21 +175,25 @@ function GameViewer() {
             handleTitleChange={handleTitleChange}
           />
           <QuestionViewer
-            question={game?.questions[0]}
+            question={game?.questions[index]}
             handleQuestionNameChange={handleQuestionNameChange}
             handleAddAnswer={handleAddAnswer}
             handleRemoveAnswer={handleRemoveAnswer}
             handleChangeAnswerCorrectness={handleChangeAnswerCorrectness}
             handleChangeAnswerContent={handleChangeAnswerContent}
+            handleImageChange={handleImageChange}
+            image={getImage()}
           />
 
           <QuestionSideBar
             game={game}
             index={index}
+            handleSaveGame={handleSaveGame}
           />
         </div>
       }
 
+      <button onClick={() => (console.log(images))}> debug </button>
     </div>
   )
 }

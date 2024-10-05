@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../../Styles/Grid.css'
 import '../../Styles/GameViewer.css'
-import GameLauncher from '../GameLauncher'; 
+import NavigationButton from './NavigationButton.jsx';
 
-const QuestionSideBar = ({ game, index, handleSaveGame }) => {
+const QuestionSideBar = ({ game, index, handleSaveGame, handleAddQuestion, handleIndexChange }) => {
 
   return (
     <div className="question-sidebar block">
       <div>
-      <div className="submit-btn btn" onClick={() => console.log("to do")}>Launch Game</div>
+        <div className="submit-btn btn" onClick={() => console.log("to do")}>Launch Game</div>
         <div className="submit-btn btn" onClick={handleSaveGame}>Save Game</div>
+        <div className="submit-btn btn" onClick={handleAddQuestion}>Add Question</div>
 
-        <div className="nav-left-btn btn" onClick={handleSaveGame}></div>
-        <div className="nav-right-btn btn" onClick={handleSaveGame}></div>
+        <NavigationButton
+          game={game}
+          index={index}
+          handleIndexChange={handleIndexChange}
+        />
       </div>
     </div>
   );

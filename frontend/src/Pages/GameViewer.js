@@ -40,7 +40,7 @@ function GameViewer() {
 
   const getImage = () => {
     if (images.has(index)) return URL.createObjectURL(images.get(index));
-    if (game.questions[index].image) return `http://localhost:5000/api/images/${game.questions[index].image}`;
+    if (game.questions && game.questions[index] && game.questions[index].image) return `http://localhost:5000/api/images/${game.questions[index].image}`; // TODO don't hardcode this
     else return placeholder;
   }
 
@@ -61,6 +61,22 @@ function GameViewer() {
     // ALSO TODO: if this was the 10th image set, we are forced to autosave since we can only upload 10 images at a time. 
     dirtyForm();
   };
+
+  const handleAddQuestion = () => {
+    let newGameState = { ...game };
+    const newQuestion = {
+      id: `Question ${newGameState.questions.length + 1}`,
+      content: `New Question ${newGameState.questions.length + 1}`,
+      questionId: 1,
+      duration: 60,
+      gameId: game.id,
+      image: null
+    }
+    newGameState.questions = [...newGameState.questions, newQuestion ];
+    setGame(newGameState); // update state
+    setIndex(newGameState.questions.length - 1) // and set index to new question
+    dirtyForm();
+  }
 
   //#endregion
 
@@ -120,10 +136,13 @@ function GameViewer() {
 
   const handleIndexChange = (action) => {
     if (action === "increment") {
-      if (index < game?.questions.length) setIndex(index + 1);
+      if (index < game?.questions.length -1) setIndex(index + 1);
     }
     else if (action === "decrement") {
       if (index > 0) setIndex(index - 1);
+    }
+    else { // This is probably the number of an index
+      setIndex(action);
     }
   }
 
@@ -169,8 +188,6 @@ function GameViewer() {
       />
       <Subbanner />
 
-      {JSON.stringify(game)}
-
       {game &&
         <div className="grid-container">
           <GameTitle
@@ -192,6 +209,8 @@ function GameViewer() {
             game={game}
             index={index}
             handleSaveGame={handleSaveGame}
+            handleAddQuestion={handleAddQuestion}
+            handleIndexChange={handleIndexChange}
           />
         </div>
       }

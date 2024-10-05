@@ -171,9 +171,83 @@
   align-items: center;
   padding: .5rem;
   border: 1px solid #ccc;
-  border-radius: .25rem;
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
+  border-radius: 1rem;
+  margin: 0.5rem auto 0.5rem auto;
+  width: 80%;
   height: 2.25rem;
+}
+
+.nav-btn-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.index-btn {
+  display: flex;
+  margin: auto 0rem auto auto;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+}
+
+.mirror-img {
+  transform: scaleX(-1);
+  margin: auto auto auto 0rem;
+}
+
+.index-numbers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 10rem; /* Adjust based on your container size */
+  overflow: hidden;
+}
+
+.index-number {
+  padding: 0 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  opacity: 1;
+}
+
+.index-number.current-index {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Invisible index placeholder */
+.invisible-index {
+  visibility: hidden; /* Make the invisible placeholders take up space but not be visible */
+  cursor: default;
+}
+
+.index-numbers.slide-left .index-number {
+  animation: slideLeft 0.3s forwards;
+}
+
+.index-numbers.slide-right .index-number {
+  animation: slideRight 0.3s forwards;
+}
+
+@keyframes slideLeft {
+  0% {
+    transform: translateX(25%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(-25%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }

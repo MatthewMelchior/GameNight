@@ -132,16 +132,19 @@ function GameViewer() {
       setIsLoading(true);
       uploadImageArray(images).then(async (res) => {
 
-        const fileNames = res.fileNames;
-        const minLength = Math.min(fileNames.length, images.size); // To avoid overflow if sizes differ
-        let mapIterator = images.entries(); // Get an iterator for the Map
         let newGameState = { ...game };
+        if (res && res.fileNames) {
+          const fileNames = res.fileNames;
+          const minLength = Math.min(fileNames?.length, images.size); // To avoid overflow if sizes differ
+          let mapIterator = images.entries(); // Get an iterator for the Map
 
-        for (let i = 0; i < minLength; i++) {
-          const imageName = fileNames[i]; // Array element
-          const [key, value] = mapIterator.next().value; // Map key-value pair
-          newGameState.questions[index].image = imageName;
+          for (let i = 0; i < minLength; i++) {
+            const imageName = fileNames[i]; // Array element
+            const [key, value] = mapIterator.next().value; // Map key-value pair
+            newGameState.questions[index].image = imageName;
+          }
         }
+
         await saveGame(newGameState);
         setImages(new Map()); // Clear map
         setIsDirty(false); // Clean the dirty flag

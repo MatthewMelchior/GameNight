@@ -23,6 +23,7 @@ export const uploadImage = async (file) => {
 }
 
 export const uploadImageArray = async (filesArray) => {
+  if (!filesArray || filesArray.length == 0) return {"fileNames": []};
   try {
     const formData = new FormData();
 

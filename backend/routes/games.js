@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const isAuthenticated = require('../middleware/auth');
 const { Answer, Question, Game } = require('../models');
+const { Op } = require('sequelize');
 
 router.get('/', isAuthenticated, async (req, res) => {
   const userId = req.session.userId
@@ -93,5 +94,115 @@ router.get('/view/:gameId', isAuthenticated, async (req, res) => {
   }
 });
 
+router.put('/save/:gameId', isAuthenticated, async (req, res) => {
+  const { gameId } = req.params;
+  const { game } = req.body;
+  const userId = req.session.userId;
+
+  try {
+    // Find the game to update
+    const existingGame = await Game.findByPk(gameId, {
+      include: {
+        model: Question,
+        as: 'questions',
+        include: { model: Answer, as: 'answers' },
+      },
+    });
+
+    if (!existingGame) {
+      return res.status(404).json({ error: 'Game not found' });
+    }
+
+    if (existingGame.userId !== userId) {
+      return res.status(403).json({ error: 'Forbidden: You are not authorized to view this game' });
+    }
+
+    // Update the game
+    await existingGame.update({
+      name: game.name,
+      userId: game.userId,
+    });
+
+    // Track the provided question and answer IDs for deletion
+    const providedQuestionIds = game.questions
+      .filter(q => typeof q.id === 'number')
+      .map(q => q.id);
+
+    // Handle questions
+    for (const question of game.questions) {
+      let questionInstance;
+      if (typeof question.id === 'number') {
+        // Update existing question
+        questionInstance = await Question.findByPk(question.id);
+        await questionInstance.update({
+          content: question.content,
+          questionType: question.questionType,
+          duration: question.duration,
+          image: question.image,
+        });
+      } else {
+        // Create new question
+        questionInstance = await Question.create({
+          content: question.content,
+          questionType: question.questionType,
+          duration: question.duration,
+          image: question.image,
+          gameId: existingGame.id,
+          userId: userId,
+        });
+      }
+
+      // Track the provided answer IDs for deletion
+      const providedAnswerIds = question.answers
+        .filter(a => typeof a.id === 'number')
+        .map(a => a.id);
+
+      // Handle answers for each question
+      for (const answer of question.answers) {
+        if (typeof answer.id === 'number') {
+          // Update existing answer
+          const answerInstance = await Answer.findByPk(answer.id);
+          await answerInstance.update({
+            content: answer.content,
+            answerType: answer.answerType,
+            isCorrect: answer.isCorrect,
+            imageId: answer.imageId,
+          });
+        } else {
+          // Create new answer
+          await Answer.create({
+            content: answer.content,
+            answerType: answer.answerType,
+            isCorrect: answer.isCorrect,
+            imageId: answer.imageId,
+            questionId: questionInstance.id,
+            userId: userId,
+          });
+        }
+      }
+
+      // Delete answers not provided
+      await Answer.destroy({
+        where: {
+          questionId: questionInstance.id,
+          id: { [Op.notIn]: providedAnswerIds },
+        },
+      });
+    }
+
+    // Delete questions not provided
+    await Question.destroy({
+      where: {
+        gameId: existingGame.id,
+        id: { [Op.notIn]: providedQuestionIds },
+      },
+    });
+
+    res.status(200).json({ message: 'Game state updated successfully' });
+  } catch (error) {
+    console.error('Error updating game state:', error);
+    res.status(500).json({ error: 'An error occurred while updating the game state' });
+  }
+});
 
 module.exports = router;

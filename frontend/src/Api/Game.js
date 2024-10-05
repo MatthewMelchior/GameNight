@@ -59,12 +59,15 @@ export const deleteUserGame = async (gameId) => {
 }
 
 export const saveGame = async (gameState) => {
-  console.log(JSON.stringify(gameState));
   try {
     const gameId = gameState.id
     const response = await fetch(url + `/save/${gameId}`, {
       method: 'PUT',
-      credentials: 'include'
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({"game": gameState})
     })
     return response;
   } catch (error) {

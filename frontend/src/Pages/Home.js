@@ -1,23 +1,28 @@
 import React from 'react';
+
+import { useAuth } from '../utils/AuthContext';
+
 import Banner from '../Components/Banner'
-import '../Styles/Grid.css'
-import '../Styles/Home.css'
 import Subbanner from '../Components/Subbanner';
 
+import '../Styles/Grid.css'
+import '../Styles/Home.css'
+
+
 function Home() {
+
+  const { isAuthenticated } = useAuth();
 
   return (
     <div>
       <Banner 
         title="Trivia Night"  
       />
-      <Subbanner></Subbanner>
-      <div class="grid-container">
-        <div class="block q"> test</div>
-        <div class="block q-body"> test</div>
-        <div class="block chat-history"> test</div>
-        <div class="block q-answer"> test</div>
-        <div class="block chat-box"> test</div>
+      <Subbanner 
+        isAuthenticated={isAuthenticated}
+      />
+      <div className="grid-container">
+        home page
       </div>
     </div>
   );

@@ -1,19 +1,28 @@
 import React from 'react';
+
+import { useAuth } from '../utils/AuthContext';
+
 import Banner from '../Components/Banner'
-import '../Styles/Grid.css'
-import '../Styles/Home.css'
 import Subbanner from '../Components/Subbanner';
 
-function Game() {
+import '../Styles/Grid.css'
+import '../Styles/Home.css'
+
+function Profile() {
+
+  const { isAuthenticated, checkAuth } = useAuth();
+
   return (
     <div>
       <Banner
         title="Trivia Night"
       />
-      <Subbanner></Subbanner>
+      <Subbanner
+        isAuthenticated={isAuthenticated}
+      />
       <h2>Profile Page</h2>
     </div>
   );
 }
 
-export default Game;
+export default Profile;

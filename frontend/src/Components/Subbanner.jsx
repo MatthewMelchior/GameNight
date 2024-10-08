@@ -1,32 +1,37 @@
 // Banner.js
 import { React, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../utils/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+
+import { logoutUser } from '../Api/User';
+
 import '../Styles/Subbanner.css'; // Optional: Add styles for your banner
 
-const Subbanner = () => {
+const Subbanner = ({ isAuthenticated }) => {
 
-  const { isAuthenticated, checkAuth } = useAuth();
+  const navigate = useNavigate(); // Hook to navigate to other routes
+
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate("/Login");
+  };
 
   useEffect(() => {
-    checkAuth();
-  });
+
+  }, [isAuthenticated])
 
   return (
     <div className="subbanner">
       <nav>
         <ul>
-          {isAuthenticated ? (
+          {isAuthenticated === true ? (
             <div>
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/Auth">Auth</Link></li>
               <li><Link to="/Games">Games</Link></li>
-              <li><Link to="/Profile">Profile</Link></li>
+              <li onClick={handleLogout}>Sign out</li>
             </div>
           ) : (
             <div>
               <li><Link to="/">Home</Link></li>
-              <li><Link to="/Auth">Auth</Link></li>
+              <li><Link to="/Login">Login</Link></li>
             </div>
           )}
         </ul>

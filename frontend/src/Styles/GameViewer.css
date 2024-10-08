@@ -45,9 +45,17 @@
 }
 
 .question-sidebar {
-  height: 50rem;
+  height: 42rem;
   grid-row-start: 3;
   grid-column: 9 / span 2;
+}
+
+.nav-btn-container {
+  display: flex;
+  flex-direction: row;
+  height: 5rem;
+  grid-row-start: 4;
+  grid-column: 5 / span 2;
 }
 
 .answer-box {
@@ -152,18 +160,23 @@
   justify-content: center;
   align-items: center;
   background-color: #0056b3;
-  color:#ccc;
+  color: #ccc;
 }
 
 .btn:hover {
-  background-color: #0056b3; /* Darker shade on hover */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow */
+  background-color: #0056b3;
+  /* Darker shade on hover */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  /* Slight shadow */
 }
 
 .btn:active {
-  background-color: #004080; /* Even darker shade on click */
-  transform: scale(0.98); /* Slightly shrink button on click */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Lessen the shadow */
+  background-color: #004080;
+  /* Even darker shade on click */
+  transform: scale(0.98);
+  /* Slightly shrink button on click */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  /* Lessen the shadow */
 }
 
 .submit-btn {
@@ -177,9 +190,24 @@
   height: 2.25rem;
 }
 
-.nav-btn-container {
+.question-prop-container {
+  height: 3rem;
   display: flex;
   flex-direction: row;
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.col-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.centered { 
+  margin: auto;
 }
 
 .index-btn {
@@ -187,6 +215,14 @@
   margin: auto 0rem auto auto;
   width: 3rem;
   height: 3rem;
+  border-radius: 1rem;
+}
+
+.duration-btn {
+  display: flex;
+  margin: auto 0rem auto auto;
+  width: 2rem;
+  height: 2rem;
   border-radius: 1rem;
 }
 
@@ -200,7 +236,8 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 10rem; /* Adjust based on your container size */
+  width: 10rem;
+  /* Adjust based on your container size */
   overflow: hidden;
 }
 
@@ -218,23 +255,25 @@
 
 /* Invisible index placeholder */
 .invisible-index {
-  visibility: hidden; /* Make the invisible placeholders take up space but not be visible */
+  visibility: hidden;
+  /* Make the invisible placeholders take up space but not be visible */
   cursor: default;
 }
 
 .index-numbers.slide-left .index-number {
-  animation: slideLeft 0.3s forwards;
+  animation: slideLeft 0.5s forwards;
 }
 
 .index-numbers.slide-right .index-number {
-  animation: slideRight 0.3s forwards;
+  animation: slideRight 0.5s forwards;
 }
 
 @keyframes slideLeft {
   0% {
-    transform: translateX(25%);
+    transform: translateX(10%);
     opacity: 1;
   }
+
   100% {
     transform: translateX(0);
     opacity: 1;
@@ -243,9 +282,10 @@
 
 @keyframes slideRight {
   0% {
-    transform: translateX(-25%);
+    transform: translateX(-10%);
     opacity: 1;
   }
+
   100% {
     transform: translateX(0);
     opacity: 1;

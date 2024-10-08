@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { getUsersGames, createGame, deleteUserGame } from '../Api/Game'
+
+import { useAuth } from '../utils/AuthContext';
+
 import Banner from '../Components/Banner'
 import Subbanner from '../Components/Subbanner';
-import { getUsersGames, createGame, deleteUserGame } from '../Api/Game'
 import GameCard from '../Components/GameCard';
+
 import '../Styles/Grid.css'
 
 function Games() {
 
   const [games, setGames] = useState([]);
+  const { isAuthenticated } = useAuth();
+
   const navigate = useNavigate();  // Initialize useNavigate hook
 
   const onViewGame = (gameId) => {
@@ -45,7 +52,9 @@ function Games() {
       <Banner
         title="Trivia Night"
       />
-      <Subbanner></Subbanner>
+      <Subbanner 
+        isAuthenticated={isAuthenticated}
+      />
 
       <h1>Your Games</h1>
       <div>

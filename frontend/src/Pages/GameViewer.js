@@ -4,12 +4,19 @@ import { useParams } from 'react-router-dom';
 import { getGameInfo, saveGame } from '../Api/Game'
 import { uploadImageArray } from '../Api/Image'
 
+import { questionTypes } from '../utils/GameViewerUtils'
+import { useAuth } from '../utils/AuthContext';
+
 import GameTitle from '../Components/GameViewer/GameTitle'
 import QuestionViewer from '../Components/GameViewer/QuestionViewer'
 import QuestionSideBar from '../Components/GameViewer/QuestionSideBar'
 import Banner from '../Components/Banner'
 import Subbanner from '../Components/Subbanner';
+import NavigationButton from '../Components/GameViewer/NavigationButton';
+
 import placeholder from '../Assets/imagePrompt256.png'
+
+import '../Styles/GameViewer.css'
 import '../Styles/Grid.css'
 
 function GameViewer() {
@@ -20,6 +27,7 @@ function GameViewer() {
   const [images, setImages] = useState(new Map());
   const [isDirty, setIsDirty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const dirtyForm = () => {
     if (!isDirty) {
@@ -39,7 +47,7 @@ function GameViewer() {
   //#region Question-Handlers
 
   const getImage = () => {
-    if (images.has(index)) return URL.createObjectURL(images.get(index));
+    if (images.has(index) && images.get(index)) return URL.createObjectURL(images.get(index));
     if (game.questions && game.questions[index] && game.questions[index].image) return `http://localhost:5000/api/images/${game.questions[index].image}`; // TODO don't hardcode this
     else return placeholder;
   }
@@ -70,11 +78,43 @@ function GameViewer() {
       questionId: 1,
       duration: 60,
       gameId: game.id,
-      image: null
+      image: null,
+      answers: []
     }
-    newGameState.questions = [...newGameState.questions, newQuestion ];
+    newGameState.questions = [...newGameState.questions, newQuestion];
     setGame(newGameState); // update state
     setIndex(newGameState.questions.length - 1) // and set index to new question
+    dirtyForm();
+  }
+
+  const handleChangeDuration = (action) => {
+    let newGameState = { ...game };
+
+    if (action === "increment" && newGameState.questions[index].duration < 120) {
+      newGameState.questions[index].duration += 15;
+    }
+    else if (action === "decrement" && newGameState.questions[index].duration > 15) {
+      newGameState.questions[index].duration -= 15;
+    }
+
+    setGame(newGameState); // update state
+    dirtyForm();
+  }
+
+  const handleChangeQuestionType = (action) => {
+    let newGameState = { ...game };
+    const length = questionTypes.length;
+    let idx = game.questions[index]?.questionType - 1;
+
+    if (action === "left") {
+      idx = (idx - 1 + length) % length
+    } else if (action === "right") {
+      idx = (idx + 1) % length
+    }
+
+    newGameState.questions[index].questionType = idx + 1;
+
+    setGame(newGameState);
     dirtyForm();
   }
 
@@ -114,9 +154,9 @@ function GameViewer() {
   const handleAddAnswer = () => {
     let newGameState = { ...game };
     const newAnswer = {
-      id: `New Answer ${newGameState.questions[index].answers.length + 1}`,
-      content: `New Answer ${newGameState.questions[index].answers.length + 1}`,
-      isCorrect: "false",
+      id: `New Answer ${newGameState.questions[index].answers?.length + 1}`,
+      content: `New Answer ${newGameState.questions[index].answers?.length + 1}`,
+      isCorrect: false,
       questionId: game.questions[index].id,
     }
     newGameState.questions[index].answers = [...newGameState.questions[index].answers, newAnswer];
@@ -134,9 +174,11 @@ function GameViewer() {
 
   //#endregion
 
+  //#region Meta-Handles
+
   const handleIndexChange = (action) => {
     if (action === "increment") {
-      if (index < game?.questions.length -1) setIndex(index + 1);
+      if (index < game?.questions.length - 1) setIndex(index + 1);
     }
     else if (action === "decrement") {
       if (index > 0) setIndex(index - 1);
@@ -172,6 +214,7 @@ function GameViewer() {
       setIsLoading(false);
     }
   }
+  //#endregion
 
   // Fetch user's game
   useEffect(() => {
@@ -186,7 +229,9 @@ function GameViewer() {
       <Banner
         title="Trivia Night"
       />
-      <Subbanner />
+      <Subbanner
+        isAuthenticated={isAuthenticated}
+      />
 
       {game &&
         <div className="grid-container">
@@ -205,17 +250,25 @@ function GameViewer() {
             image={getImage()}
           />
 
+          <NavigationButton
+            game={game}
+            index={index}
+            handleIndexChange={handleIndexChange}
+          />
+
           <QuestionSideBar
             game={game}
             index={index}
             handleSaveGame={handleSaveGame}
             handleAddQuestion={handleAddQuestion}
             handleIndexChange={handleIndexChange}
+            handleChangeDuration={handleChangeDuration}
+            handleChangeQuestionType={handleChangeQuestionType}
           />
         </div>
       }
 
-      <button onClick={() => (console.log(images))}> debug </button>
+      <button onClick={() => (console.log(game))}> debug </button>
     </div>
   )
 }

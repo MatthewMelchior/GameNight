@@ -1,9 +1,10 @@
 import React from 'react';
 import '../../Styles/Grid.css'
 import '../../Styles/GameViewer.css'
-import NavigationButton from './NavigationButton.jsx';
+import DurationEditor from './DurationEditor.jsx';
+import QuestionTypeEditor from './QuestionTypeEditor.jsx';
 
-const QuestionSideBar = ({ game, index, handleSaveGame, handleAddQuestion, handleIndexChange }) => {
+const QuestionSideBar = ({ game, index, handleSaveGame, handleAddQuestion, handleChangeDuration, handleChangeQuestionType }) => {
 
   return (
     <div className="question-sidebar block">
@@ -12,10 +13,14 @@ const QuestionSideBar = ({ game, index, handleSaveGame, handleAddQuestion, handl
         <div className="submit-btn btn" onClick={handleSaveGame}>Save Game</div>
         <div className="submit-btn btn" onClick={handleAddQuestion}>Add Question</div>
 
-        <NavigationButton
-          game={game}
-          index={index}
-          handleIndexChange={handleIndexChange}
+        <DurationEditor
+          handleChangeDuration={handleChangeDuration}
+          duration={game.questions[index].duration}
+        />
+
+        <QuestionTypeEditor
+          handleChangeQuestionType={handleChangeQuestionType}
+          questionType={game.questions[index].questionType}
         />
       </div>
     </div>

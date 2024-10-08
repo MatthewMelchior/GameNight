@@ -124,7 +124,7 @@ router.put('/save/:gameId', isAuthenticated, async (req, res) => {
     });
 
     // Track the provided question and answer IDs for deletion
-    const providedQuestionIds = game.questions
+    let providedQuestionIds = game.questions
       .filter(q => typeof q.id === 'number')
       .map(q => q.id);
 
@@ -150,34 +150,37 @@ router.put('/save/:gameId', isAuthenticated, async (req, res) => {
           gameId: existingGame.id,
           userId: userId,
         });
+        providedQuestionIds.push(questionInstance.id);
       }
 
       // Track the provided answer IDs for deletion
-      const providedAnswerIds = question.answers
+      let providedAnswerIds = question.answers
         .filter(a => typeof a.id === 'number')
         .map(a => a.id);
 
       // Handle answers for each question
       for (const answer of question.answers) {
+        let answerInstance;
         if (typeof answer.id === 'number') {
           // Update existing answer
-          const answerInstance = await Answer.findByPk(answer.id);
+          answerInstance = await Answer.findByPk(answer.id);
           await answerInstance.update({
             content: answer.content,
             answerType: answer.answerType,
-            isCorrect: answer.isCorrect,
+            isCorrect: answer.isCorrect ? 1 : 0,
             imageId: answer.imageId,
           });
         } else {
           // Create new answer
-          await Answer.create({
+          answerInstance = await Answer.create({
             content: answer.content,
             answerType: answer.answerType,
-            isCorrect: answer.isCorrect,
+            isCorrect: answer.isCorrect ? 1 : 0,
             imageId: answer.imageId,
             questionId: questionInstance.id,
             userId: userId,
           });
+          providedAnswerIds.push(answerInstance.id);
         }
       }
 
@@ -187,7 +190,7 @@ router.put('/save/:gameId', isAuthenticated, async (req, res) => {
           questionId: questionInstance.id,
           id: { [Op.notIn]: providedAnswerIds },
         },
-      });
+      }); 
     }
 
     // Delete questions not provided

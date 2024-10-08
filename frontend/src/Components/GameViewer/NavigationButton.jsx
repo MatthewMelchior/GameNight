@@ -68,13 +68,11 @@ const NavigationButton = ({ game, index, handleIndexChange }) => {
       }
     }
 
-    console.log(indices);
-
     return indices;
   };
 
   return (
-    <div className="nav-btn-container">
+    <div className="nav-btn-container block">
       <img src={arrow} className="upload-image index-btn" alt="Decrease index" onClick={decrementIndex}></img>
 
       {/* Display the indices */}

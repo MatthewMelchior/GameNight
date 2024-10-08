@@ -27,3 +27,36 @@
   grid-row-start: 3;
   grid-column: 10 / span 2;
 }
+
+.game-card-list-container {
+  grid-row-start: 1;
+  grid-column: 3 / span 8;
+}
+
+.flex-row-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.add-game-card-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 1rem;
+  height: 10rem;
+  width: 25%;
+  transition: transform 0.2s ease-in-out;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.add-game-card-container:hover {
+  transform: scale(1.05);
+}

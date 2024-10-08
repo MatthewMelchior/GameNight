@@ -226,9 +226,6 @@ function GameViewer() {
 
   return (
     <div>
-      <Banner
-        title="Trivia Night"
-      />
       <Subbanner
         isAuthenticated={isAuthenticated}
       />

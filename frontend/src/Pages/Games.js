@@ -10,6 +10,7 @@ import Subbanner from '../Components/Subbanner';
 import GameCard from '../Components/GameCard';
 
 import '../Styles/Grid.css'
+import '../Styles/Games.css'
 
 function Games() {
 
@@ -40,8 +41,9 @@ function Games() {
 
   const createNewGame = () => {
     createGame().then((res) => {
-      const gameId = res.game;  // Assuming the API response contains the gameId
-      navigate(`/Games/${gameId}`);    // Navigate to the game page using the gameId
+      getUsersGames().then((data) => {
+        setGames(data);
+      });
     }).catch((error) => {
       console.error('Error creating game:', error);  // Handle error if necessary
     });
@@ -49,36 +51,34 @@ function Games() {
 
   return (
     <div>
-      <Banner
-        title="Trivia Night"
-      />
-      <Subbanner 
+      <Subbanner
         isAuthenticated={isAuthenticated}
       />
-
-      <h1>Your Games</h1>
-      <div>
-        <button onClick={createNewGame} className="block">
-          Create New Game
-        </button>
-      </div>
       <div className="grid-container">
-        {games.length > 0 ? (
-          games.map((game) => (
-            <GameCard
-              key={game.id}
-              game={game}
-              onView={onViewGame}
-              onDelete={onDeleteGame}
-            />
-          )))
-          : (
-            <div className="colspan-1">
-              <p>No games created yet. Click "Create New Game" to get started!</p>
+        <div className="game-card-list-container flex-row-wrap">
+          {games.length > 0 && (
+            games.map((game) => (
+              <GameCard
+                key={game.id}
+                game={game}
+                onView={onViewGame}
+                onDelete={onDeleteGame}
+              />
+            )))
+          }
+          {games.length !== 0 &&
+            <div onClick={createNewGame} className="add-game-card-container">
+              Click here to add a new question!
             </div>
-          )}
+          }
+        </div>
+        {games.length === 0 &&
+          <div className="colspan-1">
+            <p>No games created yet. Click "Create New Game" to get started!</p>
+          </div>
+        }
       </div>
-    </div>
+    </div >
   )
 }
 

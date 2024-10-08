@@ -1,25 +1,82 @@
 .subbanner {
-  background-color: #4CAF50; /* Green background */
-  color: white; /* White text */
-  padding: 20px;
-  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #ff9100;
+  color: white;
 }
 
-.subbanner nav ul {
-  list-style-type: none; /* Remove bullet points */
-  padding: 0;
+.subbanner-subdivider {
+  display: flex;
+  width: calc(100% / 3);
 }
 
-.subbanner nav ul li {
-  display: inline; /* Display links inline */
-  margin: 0 15px; /* Space between links */
+.brand-link {
+  width: 256px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
 }
 
-.subbanner nav ul li a {
-  color: white; /* Link color */
-  text-decoration: none; /* Remove underline */
+.brand-image {
+  height: 4rem;
+  width: auto;
 }
 
-.subbanner nav ul li a:hover {
-  text-decoration: underline; /* Underline on hover */
+.nav-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  list-style-type: none;
+  margin: auto 2rem auto auto;
+}
+
+.nav-items-authenticated,
+.nav-items-unauthenticated {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.nav-items-authenticated img,
+.nav-items-unauthenticated img {
+  margin-right: 0.5rem;
+}
+
+.user-icon {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+}
+
+.game-icon {
+  height: 2rem;
+  width: 2rem;
+}
+
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.banner-link-container {
+  display: flex;
+  flex-direction: row;
+  margin: auto 1rem auto 1rem;
+}
+
+.link-centerer {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
 }

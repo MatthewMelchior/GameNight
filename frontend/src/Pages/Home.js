@@ -2,7 +2,6 @@ import React from 'react';
 
 import { useAuth } from '../utils/AuthContext';
 
-import Banner from '../Components/Banner'
 import Subbanner from '../Components/Subbanner';
 
 import '../Styles/Grid.css'
@@ -15,9 +14,6 @@ function Home() {
 
   return (
     <div>
-      <Banner 
-        title="Trivia Night"  
-      />
       <Subbanner 
         isAuthenticated={isAuthenticated}
       />

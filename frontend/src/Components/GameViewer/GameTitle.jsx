@@ -16,7 +16,7 @@ const GameTitle = ({ game, handleTitleChange }) => {
   }
 
   return (
-    <div className='grid-container game-title-container block'>
+    <div className='grid-container game-title-container'>
       <div className="game-title-text-container">
         {isEditingTitle ? (
           <input

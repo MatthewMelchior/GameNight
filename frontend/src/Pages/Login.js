@@ -53,7 +53,6 @@ const Login = () => {
 
   return (
     <div>
-      <Banner title="Trivia Night" />
       <Subbanner
         isAuthenticated={isAuthenticated}
       />

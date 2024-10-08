@@ -22,7 +22,7 @@ const QuestionViewer = ({ question, handleQuestionNameChange, handleAddAnswer, h
   }
 
   return (
-    <div className="question-container block">
+    <div className="question-container">
       {question &&
         <div>
           {isEditingTitle ? (

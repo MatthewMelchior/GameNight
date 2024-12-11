@@ -3,3 +3,4 @@ backend/.env
 backend/node_modules
 frontend/.env
 uploads/
+frontend/package-lock.json

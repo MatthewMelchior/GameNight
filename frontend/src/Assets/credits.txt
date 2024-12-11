@@ -7,3 +7,4 @@
 <a href="https://www.flaticon.com/free-icons/add" title="add icons">Add icons created by reussy - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/user" title="user icons">User icons created by Freepik - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/quiz" title="quiz icons">Quiz icons created by Candy Design - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/multiplayer" title="multiplayer icons">Multiplayer icons created by Voysla - Flaticon</a>

@@ -5,7 +5,7 @@ import { getUsersGames, createGame, deleteUserGame } from '../Api/Game'
 
 import { useAuth } from '../utils/AuthContext';
 
-import Banner from '../Components/Banner'
+import CreateLobby from '../Components/Lobby/CreateLobby';
 import Subbanner from '../Components/Subbanner';
 import GameCard from '../Components/GameCard';
 

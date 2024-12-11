@@ -5,6 +5,8 @@ import brandImage from '../Assets/trivianighttext.png';
 import userImage from '../Assets/user64.png';
 import gameImage from '../Assets/task512.png';
 import homeImage from '../Assets/home512.png';
+import multiImage from '../Assets/multiplayer512.png';
+
 import { logoutUser } from '../Api/User';
 
 import '../Styles/Subbanner.css'; // Optional: Add styles for your banner
@@ -35,6 +37,10 @@ const Subbanner = ({ isAuthenticated }) => {
               <div className='banner-link-container'>
                 <img src={gameImage} alt="Games" className="game-icon" />
                 <Link className="link-centerer" to="/Games">Games</Link>
+              </div>
+              <div className='banner-link-container'>
+                <img src={multiImage} alt="Multiplayer" className="game-icon" />
+                <Link className="link-centerer" to="/Lobby">Multiplayer</Link>
               </div>
               <div className='banner-link-container' onClick={handleLogout}>
                 <img src={userImage} alt="User" className="user-icon" />

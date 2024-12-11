@@ -3,6 +3,7 @@ import React from 'react';
 import { useAuth } from '../utils/AuthContext';
 
 import Subbanner from '../Components/Subbanner';
+import JoinLobby from '../Components/Lobby/JoinLobby';
 
 import '../Styles/Grid.css'
 import '../Styles/Home.css'
@@ -18,7 +19,6 @@ function Home() {
         isAuthenticated={isAuthenticated}
       />
       <div className="grid-container">
-        home page
       </div>
     </div>
   );

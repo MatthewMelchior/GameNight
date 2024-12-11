@@ -2,8 +2,24 @@ const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const http = require('http');
+const socketIo = require('socket.io');
+const handleSocketConnection = require('./socketHandler'); // Import your socket handler
 const dotenv = require('dotenv');
+
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+    cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"],
+      allowedHeaders: ["my-custom-header"],
+      credentials: true,
+    },
+  });
+
+// Pass the io instance to the socket handler
+handleSocketConnection(io);
 
 dotenv.config();
 
@@ -49,6 +65,6 @@ app.get('/', (req, res) => {
     res.send('Health check');
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

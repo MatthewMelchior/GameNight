@@ -1,0 +1,56 @@
+/* Container styling */
+.lobby-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Card styling */
+.lobby-card {
+  width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+/* Button styling */
+.button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #4caf50;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button:disabled {
+  background-color: #c8e6c9;
+  cursor: not-allowed;
+}
+
+.back-button {
+  background-color: #f44336;
+}
+
+/* Input field styling */
+.input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* Label styling */
+.label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}

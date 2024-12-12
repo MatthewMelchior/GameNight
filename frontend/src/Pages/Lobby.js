@@ -4,16 +4,19 @@ import socket from '../utils/socket';
 import { useAuth } from '../utils/AuthContext';
 
 import Subbanner from '../Components/Subbanner';
+import InitLobby from '../Components/Lobby/InitLobby';
+import CreateLobby from '../Components/Lobby/CreateLobby';
+import JoinLobby from '../Components/Lobby/JoinLobby';
 
 import '../Styles/Grid.css'
 import '../Styles/Home.css'
 import '../Styles/Lobby.css';
+import LobbyRoom from '../Components/Lobby/LobbyRoom';
 
 function Lobby() {
 
   const { isAuthenticated, checkAuth } = useAuth();
   const [action, setAction] = useState('init');
-  const [mode, setMode] = useState();
   const [lobbyId, setLobbyId] = useState(null);
   const [lobbyCode, setLobbyCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -32,16 +35,17 @@ function Lobby() {
    * 
    */
 
-  const userGames = ['Trivia Game 1', 'Trivia Game 2', 'Trivia Game 3'];
 
-  const handleBack = () => setAction("init")
-
+  // #region Listeners
   // Listen for when a new user joins the lobby
   socket.on('user_joined', (data) => {
-    console.log(data);
-    console.log("user joined:", data.userId);
     setUsers(data.lobby.users);
   });
+  // #endregion
+
+  // #region Handlers
+  // turn into handle leave lobby eventually
+  const handleBack = () => setAction("init")
 
   const handleCreateLobby = () => {
     setIsLoading(true);
@@ -71,10 +75,7 @@ function Lobby() {
     });
   };
 
-
-  useEffect(() => {
-
-  }, []);
+  // #endregion
 
   return (
     <div>
@@ -84,89 +85,37 @@ function Lobby() {
       <div className="lobby-container">
         <div className="lobby-card">
           {action === 'init' && (
-            <div>
-              <h2>Welcome to the Lobby</h2>
-              <button className="button" onClick={() => setAction("create")}>
-                Create Lobby
-              </button>
-              <button className="button" onClick={() => setAction("join")}>
-                Join Lobby
-              </button>
-            </div>
+            <InitLobby
+              setAction={setAction}
+            />
           )}
 
           {action === 'create' && (
-            <div>
-              <h2>Create a Lobby</h2>
-              <label className="label">Select a Game:</label>
-              <select
-                className="input"
-                value={selectedGame}
-                onChange={(e) => setSelectedGame(e.target.value)}
-              >
-                <option value="">Select your game</option>
-                {userGames.map((game, index) => (
-                  <option key={index} value={game}>
-                    {game}
-                  </option>
-                ))}
-              </select>
-              <button
-                className="button"
-                disabled={!selectedGame && !isLoading}
-                onClick={handleCreateLobby}
-              >
-                Create Game
-              </button>
-              <button className="button back-button" onClick={handleBack}>
-                Back
-              </button>
-            </div>
+            <CreateLobby
+              handleCreateLobby={handleCreateLobby}
+              setSelectedGame={setSelectedGame}
+              isLoading={isLoading}
+              handleBack={handleBack}
+              selectedGame={selectedGame}
+            />
           )}
 
           {action === 'join' && (
-            <div>
-              <h2>Join a Lobby</h2>
-              <label className="label">Enter Lobby Code:</label>
-              <input
-                type="text"
-                placeholder="Enter Lobby Code"
-                value={lobbyCode}
-                onChange={(e) => setLobbyCode(e.target.value)}
-                disabled={isLoading}
-              />
-              <button
-                className="button"
-                disabled={isLoading || !lobbyCode}
-                onClick={handleJoinLobby}
-              >
-                Join Lobby
-              </button>
-              <button className="button back-button" onClick={handleBack}>
-                Back
-              </button>
-            </div>
+            <JoinLobby
+              handleJoinLobby={handleJoinLobby}
+              handleBack={handleBack}
+              setLobbyCode={setLobbyCode}
+              lobbyCode={lobbyCode}
+              isLoading={isLoading}
+            />
           )}
 
           {action === 'lobby' && (
-            <div>
-              <h2>Lobby - {lobbyId}</h2>
-              <label className="label">Players:</label>
-              <ul>
-                {users?.map((user, idx) => (
-                  <li key={idx}>User {user}</li>
-                ))}
-              </ul>
-              <button
-                className="button"
-                disabled={!lobbyId}
-              >
-                start game
-              </button>
-              <button className="button back-button" onClick={handleBack}>
-                Back
-              </button>
-            </div>
+            <LobbyRoom
+              handleBack={handleBack}
+              users={users}
+              lobbyId={lobbyId}
+            />
           )}
         </div>
       </div>

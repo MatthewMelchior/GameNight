@@ -1,28 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import socket from '../../utils/socket';
 
-const CreateLobby = ({ JoinLobbyHandler }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const CreateLobby = ({ handleCreateLobby, setSelectedGame, isLoading, handleBack, selectedGame }) => {
 
-  const createLobby = () => {
-    setIsLoading(true);
-
-    // Emit an event to create a lobby on the server
-    socket.emit('create_lobby', (response) => {
-      setIsLoading(false);
-      JoinLobbyHandler(response.lobbyId);
-    });
-  };
+  // call the get games api here?
+  const userGames = ['Trivia Game 1', 'Trivia Game 2', 'Trivia Game 3'];
 
   return (
     <div>
-      <h1>Create a Lobby</h1>
-      <div>
-        <button onClick={createLobby} disabled={isLoading}>
-          {isLoading ? 'Creating...' : 'Create Lobby'}
-        </button>
-      </div>
-
+      <h2>Create a Lobby</h2>
+      <label className="label">Select a Game:</label>
+      <select
+        className="input"
+        value={selectedGame}
+        onChange={(e) => setSelectedGame(e.target.value)}
+      >
+        <option value="">Select your game</option>
+        {userGames.map((game, index) => (
+          <option key={index} value={game}>
+            {game}
+          </option>
+        ))}
+      </select>
+      <button
+        className="button"
+        disabled={!selectedGame && !isLoading}
+        onClick={handleCreateLobby}
+      >
+        Create Game
+      </button>
+      <button className="button back-button" onClick={handleBack}>
+        Back
+      </button>
     </div>
   );
 }

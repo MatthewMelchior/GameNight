@@ -10,7 +10,6 @@ import { useAuth } from '../utils/AuthContext';
 import GameTitle from '../Components/GameViewer/GameTitle'
 import QuestionViewer from '../Components/GameViewer/QuestionViewer'
 import QuestionSideBar from '../Components/GameViewer/QuestionSideBar'
-import Banner from '../Components/Banner'
 import Subbanner from '../Components/Subbanner';
 import NavigationButton from '../Components/GameViewer/NavigationButton';
 

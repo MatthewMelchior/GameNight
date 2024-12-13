@@ -28,18 +28,17 @@ function Lobby() {
    * TODO:
    * 
    * For creating lobby, call API which returns list of user's games and adds to drop down.
-   * Make sure that if user backs, they leave the lobby.
    * > on similar note, make sure that user cannot join lobby multiple times (and have the same user in the user list multiple times)
    * Instead of the randomly generated user id, users should be able to set their own names/default to their user names. 
-   * Clean up this file and abstract out major functions to separate files
    * 
    */
 
 
   // #region Listeners
   // Listen for when a new user joins the lobby
-  socket.on('user_joined', (data) => {
-    setUsers(data.lobby.users);
+  socket.on('update_users', (data) => {
+    console.log(data.users);
+    setUsers(data.users);
   });
   // #endregion
 
@@ -73,6 +72,15 @@ function Lobby() {
       }
       setIsLoading(false); // Stop loading after response
     });
+  };
+
+  const handleLeaveLobby = () => {
+    socket.emit('leave_lobby', lobbyCode, (response) => {
+      setAction('init');
+      setUsers([]);
+      setLobbyId(null);
+    });
+
   };
 
   // #endregion
@@ -112,7 +120,7 @@ function Lobby() {
 
           {action === 'lobby' && (
             <LobbyRoom
-              handleBack={handleBack}
+              handleLeaveLobby={handleLeaveLobby}
               users={users}
               lobbyId={lobbyId}
             />

@@ -14,21 +14,32 @@ const handleSocketConnection = (io) => {
       };
 
       socket.join(lobbyId); // The host joins the lobby room
-      io.to(lobbyId).emit('user_joined', { userId: socket.id, lobby: lobbies[lobbyId] });
+      io.to(lobbyId).emit('update_users', { users: lobbies[lobbyId].users });
 
       // Send lobby ID back to the client
       callback({ lobbyId });
     });
 
     socket.on("join_lobby", (lobbyId, callback) => {
-      if (lobbies[lobbyId]) {
+      if (lobbies[lobbyId] && !lobbies[lobbyId].users.includes(socket.id)) {
         lobbies[lobbyId].users.push(socket.id);
         console.log(lobbies[lobbyId]);
         socket.join(lobbyId); // Join the socket room for the lobby
-        io.to(lobbyId).emit('user_joined', { userId: socket.id, lobby: lobbies[lobbyId] });
+        io.to(lobbyId).emit('update_users', { users: lobbies[lobbyId].users });
         callback({ success: true, lobby: lobbies[lobbyId] });
       } else {
         callback({ error: 'Lobby not found!' }); // Send an error message back
+      }
+    });
+
+    socket.on("leave_lobby", (lobbyId, callback) => {
+      if (lobbies[lobbyId]) {
+        socket.leave(lobbyId);
+        const index = lobbies[lobbyId].users.indexOf(socket.id);
+        lobbies[lobbyId].users.splice(index, 1);
+        io.to(lobbyId).emit('update_users', { users: lobbies[lobbyId].users });
+        
+        callback({ success: true });
       }
     });
 
@@ -48,7 +59,7 @@ const handleSocketConnection = (io) => {
 };
 
 const generateUniqueLobbyId = () => {
-  return Math.random().toString(36).substring(2, 9); // Simple ID generator
+  return Math.random().toString(10).substring(2, 8); // Simple ID generator
 };
 
 module.exports = handleSocketConnection;

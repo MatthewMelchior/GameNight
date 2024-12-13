@@ -1,5 +1,5 @@
 
-const LobbyRoom = ({ lobbyId, users, handleBack }) => {
+const LobbyRoom = ({ lobbyId, users, handleLeaveLobby }) => {
 
   /*
   useEffect(() => {
@@ -32,8 +32,8 @@ const LobbyRoom = ({ lobbyId, users, handleBack }) => {
       >
         start game
       </button>
-      <button className="button back-button" onClick={handleBack}>
-        Back
+      <button className="button back-button" onClick={handleLeaveLobby}>
+        leave lobby
       </button>
     </div>
   );

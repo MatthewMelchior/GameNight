@@ -8,11 +8,14 @@ const AuthContext = createContext();
 // Create a Provider Component
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState(null);
 
   const checkAuth = async () => {
     // Make an API call to check session or token validity
     const response = await checkAuthentication();
     setIsAuthenticated(response.ok); // Set authentication based on response
+    const data = await response.json();
+    setUsername(data.user);
   };
 
   useEffect(() => {
@@ -20,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, checkAuth }}>
+    <AuthContext.Provider value={{ isAuthenticated, username, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

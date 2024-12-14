@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const { User } = require('../models');
 const router = express.Router();
 const isAuthenticated = require('../middleware/auth');
-const {isValidPassword, isValidUsername} = require('../utils/users');
+const { isValidPassword, isValidUsername } = require('../utils/users');
 
 // POST /api/users/register
 router.post('/register', async (req, res) => {
@@ -70,14 +70,20 @@ router.post('/logout', isAuthenticated, (req, res) => {
         if (err) {
             return res.status(500).json({ message: 'Could not log out' });
         }
-        res.clearCookie('connect.sid'); 
+        res.clearCookie('connect.sid');
         res.status(200).json({ message: 'Logout successful' });
     });
 });
 
 // get is authenticated
-router.get('/isAuthenticated', isAuthenticated, (req, res) => {
-    res.status(200).json({ message: 'authenticated' });;
+router.get('/isAuthenticated', isAuthenticated, async (req, res) => {
+    const userId = req.session.userId
+    const user = await User.findByPk(userId);
+    if (!user) {
+        return res.status(404).json({ message: 'Authenticated but no user found' });
+    }
+
+    res.status(200).json({ message: 'authenticated', user: user.username });
 });
 
 module.exports = router;

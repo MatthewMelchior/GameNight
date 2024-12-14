@@ -5,11 +5,11 @@ const handleSocketConnection = (io) => {
   io.on("connection", (socket) => {
     console.log('A user connected', socket.id);
 
-    socket.on('create_lobby', (callback) => {
+    socket.on('create_lobby', (username, callback) => {
       const lobbyId = generateUniqueLobbyId(); // You can use a function to generate a unique lobby ID
       lobbies[lobbyId] = {
         host: socket.id,
-        users: [socket.id],
+        users: [username],
         status: 'waiting', // Waiting for players
       };
 
@@ -20,9 +20,9 @@ const handleSocketConnection = (io) => {
       callback({ lobbyId });
     });
 
-    socket.on("join_lobby", (lobbyId, callback) => {
+    socket.on("join_lobby", (lobbyId, username, callback) => {
       if (lobbies[lobbyId] && !lobbies[lobbyId].users.includes(socket.id)) {
-        lobbies[lobbyId].users.push(socket.id);
+        lobbies[lobbyId].users.push(username);
         console.log(lobbies[lobbyId]);
         socket.join(lobbyId); // Join the socket room for the lobby
         io.to(lobbyId).emit('update_users', { users: lobbies[lobbyId].users });
@@ -32,10 +32,10 @@ const handleSocketConnection = (io) => {
       }
     });
 
-    socket.on("leave_lobby", (lobbyId, callback) => {
+    socket.on("leave_lobby", (lobbyId, username, callback) => {
       if (lobbies[lobbyId]) {
         socket.leave(lobbyId);
-        const index = lobbies[lobbyId].users.indexOf(socket.id);
+        const index = lobbies[lobbyId].users.indexOf(username);
         lobbies[lobbyId].users.splice(index, 1);
         io.to(lobbyId).emit('update_users', { users: lobbies[lobbyId].users });
         

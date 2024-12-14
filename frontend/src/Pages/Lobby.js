@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import socket from '../utils/socket';
+import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../utils/AuthContext';
 
@@ -15,7 +16,7 @@ import LobbyRoom from '../Components/Lobby/LobbyRoom';
 
 function Lobby() {
 
-  const { isAuthenticated, checkAuth } = useAuth();
+  const { isAuthenticated, username, checkAuth } = useAuth();
   const [action, setAction] = useState('init');
   const [lobbyId, setLobbyId] = useState(null);
   const [lobbyCode, setLobbyCode] = useState('');
@@ -24,10 +25,11 @@ function Lobby() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate();  // Initialize useNavigate hook
+
   /**
    * TODO:
    * 
-   * For creating lobby, call API which returns list of user's games and adds to drop down.
    * > on similar note, make sure that user cannot join lobby multiple times (and have the same user in the user list multiple times)
    * Instead of the randomly generated user id, users should be able to set their own names/default to their user names. 
    * 
@@ -37,7 +39,6 @@ function Lobby() {
   // #region Listeners
   // Listen for when a new user joins the lobby
   socket.on('update_users', (data) => {
-    console.log(data.users);
     setUsers(data.users);
   });
   // #endregion
@@ -50,7 +51,7 @@ function Lobby() {
     setIsLoading(true);
 
     // Emit an event to create a lobby on the server
-    socket.emit('create_lobby', (response) => {
+    socket.emit('create_lobby', username, (response) => {
       setIsLoading(false);
       setAction('lobby');
       setLobbyId(response.lobbyId);
@@ -63,7 +64,7 @@ function Lobby() {
     setError(null);
 
     // Emit the join_lobby event to the backend with the lobby code
-    socket.emit('join_lobby', lobbyCode, (response) => {
+    socket.emit('join_lobby', lobbyCode, username, (response) => {
       if (response.error) {
         setError(response.error); // Set any error from the server
       } else {
@@ -75,7 +76,7 @@ function Lobby() {
   };
 
   const handleLeaveLobby = () => {
-    socket.emit('leave_lobby', lobbyCode, (response) => {
+    socket.emit('leave_lobby', lobbyCode, username, (response) => {
       setAction('init');
       setUsers([]);
       setLobbyId(null);
@@ -84,6 +85,13 @@ function Lobby() {
   };
 
   // #endregion
+
+  // Redirect if not auth'd
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate(`/Login`);
+    }
+  }, []);
 
   return (
     <div>
@@ -123,6 +131,7 @@ function Lobby() {
               handleLeaveLobby={handleLeaveLobby}
               users={users}
               lobbyId={lobbyId}
+              username={username}
             />
           )}
         </div>

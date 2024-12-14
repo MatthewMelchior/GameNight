@@ -32,7 +32,7 @@ function Games() {
   };
 
 
-  // Fetch user's games (replace with your actual API endpoint)
+  // Fetch user's games 
   useEffect(() => {
     getUsersGames().then((data) => {
       setGames(data);

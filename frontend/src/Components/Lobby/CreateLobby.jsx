@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { getUsersGames } from '../../Api/Game'
 
 const CreateLobby = ({ handleCreateLobby, setSelectedGame, isLoading, handleBack, selectedGame }) => {
 
-  // call the get games api here?
-  const userGames = ['Trivia Game 1', 'Trivia Game 2', 'Trivia Game 3'];
+  const [games, setGames] = useState([]);
+
+  // Fetch user's games 
+  useEffect(() => {
+    getUsersGames().then((data) => {
+      setGames(data);
+    });
+  }, []);
 
   return (
     <div>
@@ -15,9 +22,9 @@ const CreateLobby = ({ handleCreateLobby, setSelectedGame, isLoading, handleBack
         onChange={(e) => setSelectedGame(e.target.value)}
       >
         <option value="">Select your game</option>
-        {userGames.map((game, index) => (
-          <option key={index} value={game}>
-            {game}
+        {games.map((game, index) => (
+          <option key={index} value={game.name}>
+            {game.name}
           </option>
         ))}
       </select>

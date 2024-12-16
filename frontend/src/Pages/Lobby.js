@@ -76,7 +76,7 @@ function Lobby() {
   };
 
   const handleLeaveLobby = () => {
-    socket.emit('leave_lobby', lobbyCode, username, (response) => {
+    socket.emit('leave_lobby', lobbyId, username, (response) => {
       setAction('init');
       setUsers([]);
       setLobbyId(null);

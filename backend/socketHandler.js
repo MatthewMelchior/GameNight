@@ -8,7 +8,7 @@ const handleSocketConnection = (io) => {
     socket.on('create_lobby', (username, callback) => {
       const lobbyId = generateUniqueLobbyId(); // You can use a function to generate a unique lobby ID
       lobbies[lobbyId] = {
-        host: socket.id,
+        host: username,
         users: [username],
         status: 'waiting', // Waiting for players
       };
@@ -21,7 +21,7 @@ const handleSocketConnection = (io) => {
     });
 
     socket.on("join_lobby", (lobbyId, username, callback) => {
-      if (lobbies[lobbyId] && !lobbies[lobbyId].users.includes(socket.id)) {
+      if (lobbies[lobbyId] && !lobbies[lobbyId].users.includes(username)) {
         lobbies[lobbyId].users.push(username);
         console.log(lobbies[lobbyId]);
         socket.join(lobbyId); // Join the socket room for the lobby
@@ -34,11 +34,27 @@ const handleSocketConnection = (io) => {
 
     socket.on("leave_lobby", (lobbyId, username, callback) => {
       if (lobbies[lobbyId]) {
-        socket.leave(lobbyId);
-        const index = lobbies[lobbyId].users.indexOf(username);
-        lobbies[lobbyId].users.splice(index, 1);
-        io.to(lobbyId).emit('update_users', { users: lobbies[lobbyId].users });
-        
+        if (lobbies[lobbyId].host === username) // Person leaving is host 
+        {
+          if (lobbies[lobbyId].users.length === 1) {
+            socket.leave(lobbyId);
+            delete lobbies[lobbyId];
+          }
+          else {
+            socket.leave(lobbyId);
+            const index = lobbies[lobbyId].users.indexOf(username);
+            lobbies[lobbyId].users.splice(index, 1);
+            lobbies[lobbyId].host = lobbies[lobbyId].users[0];
+            io.to(lobbyId).emit('update_users', { users: lobbies[lobbyId].users });
+          }
+        }
+        else {
+          socket.leave(lobbyId);
+          const index = lobbies[lobbyId].users.indexOf(username);
+          lobbies[lobbyId].users.splice(index, 1);
+          io.to(lobbyId).emit('update_users', { users: lobbies[lobbyId].users });
+        }
+
         callback({ success: true });
       }
     });

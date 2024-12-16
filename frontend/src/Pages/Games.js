@@ -5,7 +5,6 @@ import { getUsersGames, createGame, deleteUserGame } from '../Api/Game'
 
 import { useAuth } from '../utils/AuthContext';
 
-import CreateLobby from '../Components/Lobby/CreateLobby';
 import Subbanner from '../Components/Subbanner';
 import GameCard from '../Components/GameCard';
 
@@ -16,6 +15,7 @@ function Games() {
 
   const [games, setGames] = useState([]);
   const { isAuthenticated } = useAuth();
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();  // Initialize useNavigate hook
 
@@ -36,6 +36,7 @@ function Games() {
   useEffect(() => {
     getUsersGames().then((data) => {
       setGames(data);
+      setLoading(false);
     });
   }, []);
 
@@ -56,7 +57,7 @@ function Games() {
       />
       <div className="grid-container">
         <div className="game-card-list-container flex-row-wrap">
-          {games.length > 0 && (
+          {games.length > 0 && !loading && (
             games.map((game) => (
               <GameCard
                 key={game.id}
@@ -66,13 +67,13 @@ function Games() {
               />
             )))
           }
-          {games.length !== 0 &&
+          {games.length !== 0 && !loading &&
             <div onClick={createNewGame} className="add-game-card-container">
               Click here to add a new question!
             </div>
           }
         </div>
-        {games.length === 0 &&
+        {games.length === 0 && !loading &&
           <div className="colspan-1">
             <p>No games created yet. Click "Create New Game" to get started!</p>
           </div>

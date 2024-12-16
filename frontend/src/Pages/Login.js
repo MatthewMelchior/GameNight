@@ -29,7 +29,7 @@ const Login = () => {
   const handleLogin = async () => {
     let result = await loginUser(username, password);
     if (result === "Login successful") {
-      checkAuth();
+      await checkAuth();
       navigate("/Games");
     } 
     setMessage(result);

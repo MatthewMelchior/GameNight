@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../utils/AuthContext';
 
+import { getGameInfo } from '../Api/Game';
+
 import Subbanner from '../Components/Subbanner';
 import InitLobby from '../Components/Lobby/InitLobby';
 import CreateLobby from '../Components/Lobby/CreateLobby';
@@ -22,6 +24,7 @@ function Lobby() {
   const [lobbyCode, setLobbyCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedGame, setSelectedGame] = useState(''); // Tracks the selected game
+  const [gameId, setGameId] = useState(-1);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
 
@@ -41,6 +44,11 @@ function Lobby() {
   socket.on('update_users', (data) => {
     setUsers(data.users);
   });
+
+  socket.on('start_game', (data) => {
+    navigate(`/Lobby/${lobbyId}`);
+  });
+
   // #endregion
 
   // #region Handlers
@@ -81,17 +89,19 @@ function Lobby() {
       setUsers([]);
       setLobbyId(null);
     });
-
   };
 
-  // #endregion
+  const handleStartGame = () => {
+    getGameInfo(gameId).then((data) => {
+      //setGame(data.game);
+      // Emit "set-up" to socket which adds game to backend, 
+      // once "set-up" calls back, send another emit which activates game for everyone in lobby
+      // navigate everyone to new page 
+      socket.emit('setup_game', lobbyId, username, data);
+    });
+  }
 
-  // Redirect if not auth'd
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate(`/Login`);
-    }
-  }, []);
+  // #endregion
 
   return (
     <div>
@@ -110,9 +120,10 @@ function Lobby() {
             <CreateLobby
               handleCreateLobby={handleCreateLobby}
               setSelectedGame={setSelectedGame}
+              selectedGame={selectedGame}
               isLoading={isLoading}
               handleBack={handleBack}
-              selectedGame={selectedGame}
+              setGameId={setGameId}
             />
           )}
 
@@ -132,6 +143,7 @@ function Lobby() {
               users={users}
               lobbyId={lobbyId}
               username={username}
+              handleStartGame={handleStartGame}
             />
           )}
         </div>

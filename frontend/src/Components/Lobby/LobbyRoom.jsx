@@ -1,5 +1,5 @@
 
-const LobbyRoom = ({ lobbyId, users, handleLeaveLobby }) => {
+const LobbyRoom = ({ lobbyId, users, handleLeaveLobby, handleStartGame }) => {
 
   return (
     <div>
@@ -13,6 +13,7 @@ const LobbyRoom = ({ lobbyId, users, handleLeaveLobby }) => {
       <button
         className="button"
         disabled={!lobbyId}
+        onClick={handleStartGame}
       >
         start game
       </button>

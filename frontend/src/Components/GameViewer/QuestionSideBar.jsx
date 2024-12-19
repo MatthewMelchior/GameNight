@@ -19,7 +19,6 @@ const QuestionSideBar = ({ game, index, handleSaveGame, handleAddQuestion, handl
           questionType={game.questions[index]?.questionType}
         />
         <div className="submit-btn btn" onClick={handleSaveGame}>Save Game</div>
-        <div className="submit-btn btn" onClick={() => console.log("to do")}>Launch Game</div>
       </div>
     </div>
   );

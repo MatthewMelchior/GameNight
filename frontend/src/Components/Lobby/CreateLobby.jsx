@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getUsersGames } from '../../Api/Game'
 
-const CreateLobby = ({ handleCreateLobby, setSelectedGame, isLoading, handleBack, selectedGame }) => {
+const CreateLobby = ({ handleCreateLobby, setSelectedGame, selectedGame, isLoading, handleBack, setGameId }) => {
 
   const [games, setGames] = useState([]);
+
+  const handleSelect = (gameId) => {
+    const name = games.filter((x) => x.id == gameId);
+    setSelectedGame(name[0]?.name);
+    setGameId(gameId);
+  }
 
   // Fetch user's games 
   useEffect(() => {
@@ -19,11 +25,11 @@ const CreateLobby = ({ handleCreateLobby, setSelectedGame, isLoading, handleBack
       <select
         className="input"
         value={selectedGame}
-        onChange={(e) => setSelectedGame(e.target.value)}
+        onChange={(e) => handleSelect(e.target.value)}
       >
         <option value="">Select your game</option>
         {games.map((game, index) => (
-          <option key={index} value={game.name}>
+          <option key={index} value={game.id}>
             {game.name}
           </option>
         ))}
